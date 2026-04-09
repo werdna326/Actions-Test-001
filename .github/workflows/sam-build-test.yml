@@ -20,18 +20,19 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
+      - name: Run Unit Tests
+        run: mvn test
+        working-directory: HelloWorldFunction
+
       - name: Cache SAM build directory
         uses: actions/cache@v4
         with:
           path: .aws-sam
-          key: ${{ runner.os }}-sam-build-v2-${{ hashFiles('template.yaml', 'HelloWorldFunction/pom.xml', 'HelloWorldFunction/src/**') }}
+          # ワークフローファイル自体や .samignore が変更された際にも自動でキャッシュを破棄（再作成）するように監視対象に追加しました
+          key: ${{ runner.os }}-sam-build-${{ hashFiles('.github/workflows/sam-build-test.yml', '.samignore', 'template.yaml', 'HelloWorldFunction/pom.xml', 'HelloWorldFunction/src/**') }}
           restore-keys: |
-            ${{ runner.os }}-sam-build-v2-
+            ${{ runner.os }}-sam-build-
 
       - name: Build SAM application (Parallel functions)
         # --parallel パラメータを付けることで、template.yaml内の複数の関数を同時に並列ビルドします
         run: sam build --cached --parallel
-
-      - name: Run Unit Tests
-        run: mvn test
-        working-directory: HelloWorldFunction
