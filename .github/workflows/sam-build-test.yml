@@ -20,10 +20,6 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
-      - name: Set up AWS SAM CLI
-        uses: aws-actions/setup-sam@v2
-        with:
-          use-installer: true
 
       - name: Cache SAM build directory
         uses: actions/cache@v3
