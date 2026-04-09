@@ -34,5 +34,7 @@ jobs:
             ${{ runner.os }}-sam-build-
 
       - name: Build SAM application (Parallel functions)
-        # --parallel パラメータを付けることで、template.yaml内の複数の関数を同時に並列ビルドします
-        run: sam build --cached --parallel
+        # SAMの仕様で .samignore がキャッシュのハッシュ計算に効かない問題があるため、ビルド直前に不要な一時ファイルを一度消し飛ばすようにします
+        run: |
+          mvn clean -f HelloWorldFunction/pom.xml
+          sam build --cached --parallel
