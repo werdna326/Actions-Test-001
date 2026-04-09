@@ -8,6 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # パラレル（並列）実行をテストするために、同じジョブを同時に3つ走らせる設定です
+        job-id: [1, 2, 3]
 
     steps:
       - name: Checkout Repository
@@ -29,9 +33,12 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .aws-sam
+          # マトリクスのIDをキャッシュキーの一部に含めることで、ジョブごとに個別のキャッシュを持たせることも可能です（今回は共通キャッシュをテストします）
           key: ${{ runner.os }}-sam-build-${{ hashFiles('template.yaml', 'HelloWorldFunction/pom.xml', 'HelloWorldFunction/src/**') }}
           restore-keys: |
             ${{ runner.os }}-sam-build-
 
-      - name: Build SAM application
-        run: sam build --cached
+      - name: Build SAM application (Parallel Job ${{ matrix.job-id }})
+        run: |
+          echo "This is Parallel Job number ${{ matrix.job-id }}"
+          sam build --cached
