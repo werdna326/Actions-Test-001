@@ -3,7 +3,7 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   Actions-Test-001
 
-  Sample SAM Template for testing GitHub Actions cache
+  Sample SAM Template for testing GitHub Actions cache and parallel build
 
 Globals:
   Function:
@@ -11,7 +11,25 @@ Globals:
     MemorySize: 512
 
 Resources:
-  HelloWorldFunction:
+  HelloWorldFunction1:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: HelloWorldFunction
+      Handler: helloworld.App::handleRequest
+      Runtime: java21
+      Architectures:
+        - x86_64
+
+  HelloWorldFunction2:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: HelloWorldFunction
+      Handler: helloworld.App::handleRequest
+      Runtime: java21
+      Architectures:
+        - x86_64
+
+  HelloWorldFunction3:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: HelloWorldFunction
@@ -21,6 +39,6 @@ Resources:
         - x86_64
 
 Outputs:
-  HelloWorldFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
+  HelloWorldFunction1:
+    Description: "Hello World Lambda Function 1 ARN"
+    Value: !GetAtt HelloWorldFunction1.Arn
