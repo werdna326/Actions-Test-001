@@ -1,0 +1,37 @@
+name: SAM Build Cache Test
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Set up AWS SAM CLI
+        uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
+
+      - name: Cache SAM build directory
+        uses: actions/cache@v3
+        with:
+          path: .aws-sam
+          key: ${{ runner.os }}-sam-build-${{ hashFiles('template.yaml', 'HelloWorldFunction/pom.xml', 'HelloWorldFunction/src/**') }}
+          restore-keys: |
+            ${{ runner.os }}-sam-build-
+
+      - name: Build SAM application
+        run: sam build --cached
