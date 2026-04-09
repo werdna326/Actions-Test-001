@@ -21,6 +21,10 @@ jobs:
           cache: 'maven'
 
 
+      - name: Run Unit Tests
+        run: mvn test
+        working-directory: HelloWorldFunction
+
       - name: Cache SAM build directory
         uses: actions/cache@v3
         with:
