@@ -24,9 +24,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .aws-sam
-          key: ${{ runner.os }}-sam-build-${{ hashFiles('template.yaml', 'HelloWorldFunction/pom.xml', 'HelloWorldFunction/src/**') }}
+          key: ${{ runner.os }}-sam-build-v2-${{ hashFiles('template.yaml', 'HelloWorldFunction/pom.xml', 'HelloWorldFunction/src/**') }}
           restore-keys: |
-            ${{ runner.os }}-sam-build-
+            ${{ runner.os }}-sam-build-v2-
 
       - name: Build SAM application (Parallel functions)
         # --parallel パラメータを付けることで、template.yaml内の複数の関数を同時に並列ビルドします
