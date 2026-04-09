@@ -16,6 +16,6 @@ public class App implements RequestHandler<Object, Object> {
         headers.put("Content-Type", "application/json");
         headers.put("X-Custom-Header", "application/json");
 
-        return "{\"message2334\": \"hello world\", \"location\": \"GitHub Actions\"}";
+        return "{\"message23345\": \"hello world\", \"location\": \"GitHub Actions\"}";
     }
 }

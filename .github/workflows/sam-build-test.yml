@@ -37,4 +37,7 @@ jobs:
         # SAMの仕様で .samignore がキャッシュのハッシュ計算に効かない問題があるため、ビルド直前に不要な一時ファイルを一度消し飛ばすようにします
         run: |
           mvn clean -f HelloWorldFunction/pom.xml
-          sam build --cached --parallel --debug --parameter-overrides "MavenOptions='-Dmaven.test.skip=true'"
+          sam build --cached --parallel --debug
+        env:
+            # SAMが内部で実行する mvn コマンドの引数にこれを追加させる
+            MAVEN_OPTS: "-Dmaven.test.skip=true"
