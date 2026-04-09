@@ -14,7 +14,7 @@ Resources:
   HelloWorldFunction1:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: HelloWorldFunction
+      CodeUri: functions/Function1
       Handler: helloworld.App::handleRequest
       Runtime: java21
       Architectures:
@@ -23,7 +23,7 @@ Resources:
   HelloWorldFunction2:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: HelloWorldFunction
+      CodeUri: functions/Function2
       Handler: helloworld.App::handleRequest
       Runtime: java21
       Architectures:
@@ -32,7 +32,25 @@ Resources:
   HelloWorldFunction3:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: HelloWorldFunction
+      CodeUri: functions/Function3
+      Handler: helloworld.App::handleRequest
+      Runtime: java21
+      Architectures:
+        - x86_64
+
+  HelloWorldFunction4:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/Function4
+      Handler: helloworld.App::handleRequest
+      Runtime: java21
+      Architectures:
+        - x86_64
+
+  HelloWorldFunction5:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/Function5
       Handler: helloworld.App::handleRequest
       Runtime: java21
       Architectures:

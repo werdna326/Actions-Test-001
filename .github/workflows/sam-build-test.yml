@@ -21,23 +21,29 @@ jobs:
           cache: 'maven'
 
       - name: Run Unit Tests
-        run: mvn test
-        working-directory: HelloWorldFunction
+        run: |
+          for dir in functions/*; do
+            if [ -d "$dir" ]; then
+              echo "Testing $dir..."
+              mvn test -f "$dir/pom.xml"
+            fi
+          done
 
       - name: Cache SAM build directory
         uses: actions/cache@v5
         with:
           path: .aws-sam
-          # ワークフローファイル自体や .samignore が変更された際にも自動でキャッシュを破棄（再作成）するように監視対象に追加しました
-          key: ${{ runner.os }}-sam-build-${{ hashFiles('.github/workflows/sam-build-test.yml', '.samignore', 'template.yaml', 'HelloWorldFunction/pom.xml', 'HelloWorldFunction/src/**') }}
+          key: ${{ runner.os }}-sam-build-${{ hashFiles('.github/workflows/sam-build-test.yml', '.samignore', 'template.yaml', 'functions/**/pom.xml', 'functions/**/src/**') }}
           restore-keys: |
             ${{ runner.os }}-sam-build-
 
       - name: Build SAM application (Parallel functions)
-        # SAMの仕様で .samignore がキャッシュのハッシュ計算に効かない問題があるため、ビルド直前に不要な一時ファイルを一度消し飛ばすようにします
         run: |
-          mvn clean -f HelloWorldFunction/pom.xml
-          sam build --cached --parallel --debug
+          for dir in functions/*; do
+            if [ -d "$dir" ]; then
+              mvn clean -f "$dir/pom.xml"
+            fi
+          done
+          sam build --cached --parallel
         env:
-            # SAMが内部で実行する mvn コマンドの引数にこれを追加させる
             MAVEN_OPTS: "-Dmaven.test.skip=true"
